@@ -6,7 +6,9 @@ import android.os.Bundle
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
+import android.widget.ArrayAdapter
 import android.widget.Button
+import android.widget.Spinner
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 
@@ -32,6 +34,19 @@ class DashboardActivity : AppCompatActivity() {
             startActivity(intent)
             finish()
         }
+
+        val yearSpinner: Spinner = findViewById(R.id.yearSpinner)
+
+// Create an ArrayAdapter using a simple spinner layout and years array
+        val years = Array(124) { i -> (1900 + i).toString() }  // Change the range as you need
+        val adapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, years)
+
+// Specify the layout to use when the list of choices appears
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+
+// Apply the adapter to the spinner
+        yearSpinner.adapter = adapter
+
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -48,6 +63,7 @@ class DashboardActivity : AppCompatActivity() {
                 startActivity(intent)
                 true
             }
+
             else -> super.onOptionsItemSelected(item)
         }
     }
