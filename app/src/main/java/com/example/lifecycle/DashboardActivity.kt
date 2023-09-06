@@ -64,7 +64,6 @@ class DashboardActivity : AppCompatActivity() {
             sharedPreferences.edit().putString("userData", dataString).apply()
 
             dataFragment.setData(dataString)
-
         }
 
         supportFragmentManager.beginTransaction().add(R.id.fragmentContainer, dataFragment).commit()
