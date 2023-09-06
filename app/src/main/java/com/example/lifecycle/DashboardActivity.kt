@@ -8,13 +8,19 @@ import android.view.Menu
 import android.view.MenuItem
 import android.widget.ArrayAdapter
 import android.widget.Button
+import android.widget.EditText
+import android.widget.FrameLayout
+import android.widget.RadioButton
+import android.widget.RadioGroup
 import android.widget.Spinner
+import android.widget.Switch
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 
 class DashboardActivity : AppCompatActivity() {
 
     lateinit var sharedPreferences: SharedPreferences
+    lateinit var dataFragment: DataFragment  // Define dataFragment at the class level
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -36,16 +42,39 @@ class DashboardActivity : AppCompatActivity() {
         }
 
         val yearSpinner: Spinner = findViewById(R.id.yearSpinner)
-
-        val years = Array(124) { i -> (1900 + i).toString() }  // Change the range as you need
+        val years = Array(124) { i -> (1900 + i).toString() }
         val adapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, years)
-
-        // Specify the layout to use when the list of choices appears
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-
-        // Apply the adapter to the spinner
         yearSpinner.adapter = adapter
 
+        val saveButton: Button = findViewById(R.id.saveButton)
+
+        // Initialize DataFragment
+        dataFragment = DataFragment()
+
+        saveButton.setOnClickListener {
+            val fullName = findViewById<EditText>(R.id.fullNameEditText).text.toString()
+            val email = findViewById<EditText>(R.id.emailEditText).text.toString()
+            val yearOfBirth = findViewById<Spinner>(R.id.yearSpinner).selectedItem.toString()
+            val certified = findViewById<Switch>(R.id.certifiedSwitch).isChecked
+            val genderId = findViewById<RadioGroup>(R.id.genderRadioGroup).checkedRadioButtonId
+            val gender = findViewById<RadioButton>(genderId).text.toString()
+
+            val dataString = "Full Name: $fullName\nEmail: $email\nYear of Birth: $yearOfBirth\nCertified: $certified\nGender: $gender"
+            sharedPreferences.edit().putString("userData", dataString).apply()
+
+            dataFragment.setData(dataString)
+        }
+
+        supportFragmentManager.beginTransaction().add(R.id.fragmentContainer, dataFragment).commit()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        val savedData = sharedPreferences.getString("userData", "")
+        if (savedData != "") {
+            dataFragment.setData(savedData!!)
+        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -62,7 +91,6 @@ class DashboardActivity : AppCompatActivity() {
                 startActivity(intent)
                 true
             }
-
             else -> super.onOptionsItemSelected(item)
         }
     }
