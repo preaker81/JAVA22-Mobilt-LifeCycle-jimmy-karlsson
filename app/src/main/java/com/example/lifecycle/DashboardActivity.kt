@@ -9,7 +9,6 @@ import android.view.MenuItem
 import android.widget.ArrayAdapter
 import android.widget.Button
 import android.widget.EditText
-import android.widget.FrameLayout
 import android.widget.RadioButton
 import android.widget.RadioGroup
 import android.widget.Spinner
@@ -20,7 +19,11 @@ import androidx.appcompat.widget.Toolbar
 class DashboardActivity : AppCompatActivity() {
 
     lateinit var sharedPreferences: SharedPreferences
-    lateinit var dataFragment: DataFragment  // Define dataFragment at the class level
+    lateinit var dataFragment: DataFragment
+
+    val namePattern = "^[a-zA-Z ]{3,}$".toRegex()
+    val emailPattern = "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$".toRegex()
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -55,12 +58,28 @@ class DashboardActivity : AppCompatActivity() {
         saveButton.setOnClickListener {
             val fullName = findViewById<EditText>(R.id.fullNameEditText).text.toString()
             val email = findViewById<EditText>(R.id.emailEditText).text.toString()
+
+            // Validate name
+            if (!isValidInput(fullName, namePattern)) {
+                findViewById<EditText>(R.id.fullNameEditText).error = "Invalid name"
+                return@setOnClickListener
+            }
+
+            // Validate email
+            if (!isValidInput(email, emailPattern)) {
+                findViewById<EditText>(R.id.emailEditText).error = "Invalid email"
+                return@setOnClickListener
+            }
+
+            // Your existing code for other fields
             val yearOfBirth = findViewById<Spinner>(R.id.yearSpinner).selectedItem.toString()
             val certified = findViewById<Switch>(R.id.certifiedSwitch).isChecked
             val genderId = findViewById<RadioGroup>(R.id.genderRadioGroup).checkedRadioButtonId
             val gender = findViewById<RadioButton>(genderId).text.toString()
 
-            val dataString = "Full Name: $fullName\nEmail: $email\nYear of Birth: $yearOfBirth\nCertified: $certified\nGender: $gender"
+            // Saving data into SharedPreferences and updating DataFragment
+            val dataString =
+                "Full Name: $fullName\nEmail: $email\nYear of Birth: $yearOfBirth\nCertified: $certified\nGender: $gender"
             sharedPreferences.edit().putString("userData", dataString).apply()
 
             dataFragment.setData(dataString)
@@ -91,7 +110,13 @@ class DashboardActivity : AppCompatActivity() {
                 startActivity(intent)
                 true
             }
+
             else -> super.onOptionsItemSelected(item)
         }
     }
+
+    fun isValidInput(input: String, pattern: Regex): Boolean {
+        return pattern.matches(input)
+    }
+
 }
