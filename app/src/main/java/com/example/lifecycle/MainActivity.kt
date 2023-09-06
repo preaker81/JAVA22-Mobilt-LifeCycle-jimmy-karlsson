@@ -15,7 +15,7 @@ import androidx.appcompat.widget.Toolbar
 class MainActivity : AppCompatActivity() {
 
     lateinit var sharedPreferences: SharedPreferences
-    var isFirstRun = true  // Add this flag to your class variables
+    var isFirstRun = true
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
