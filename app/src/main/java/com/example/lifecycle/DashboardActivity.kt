@@ -50,6 +50,8 @@ class DashboardActivity : AppCompatActivity() {
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         yearSpinner.adapter = adapter
 
+        yearSpinner.setSelection(81)
+
         val saveButton: Button = findViewById(R.id.saveButton)
 
         // Initialize DataFragment

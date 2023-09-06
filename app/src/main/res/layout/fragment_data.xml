@@ -9,7 +9,7 @@
         android:id="@+id/dataTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Data goes here" />
+        android:text="" />
 
 
 </FrameLayout>

@@ -24,6 +24,9 @@ class MainActivity : AppCompatActivity() {
         sharedPreferences = getSharedPreferences("MyApp", MODE_PRIVATE)
 
         val logoutButtonMain: Button = findViewById(R.id.logoutButtonMain)
+        val usernameEditText: EditText = findViewById(R.id.usernameEditText)
+        val passwordEditText: EditText = findViewById(R.id.passwordEditText)
+        val loginButton: Button = findViewById(R.id.loginButton)
 
         if (sharedPreferences.getBoolean("isLoggedIn", false) && isFirstRun) {
             isFirstRun = false  // Set the flag to false
@@ -32,15 +35,21 @@ class MainActivity : AppCompatActivity() {
             setSupportActionBar(toolbar)
             logoutButtonMain.visibility = View.VISIBLE
 
+            // Disabling the username, password fields and login button
+            usernameEditText.isEnabled = false
+            passwordEditText.isEnabled = false
+            loginButton.isEnabled = false
+
             val intent = Intent(this, DashboardActivity::class.java)
             startActivity(intent)
         } else {
             logoutButtonMain.visibility = View.GONE
-        }
 
-        val usernameEditText: EditText = findViewById(R.id.usernameEditText)
-        val passwordEditText: EditText = findViewById(R.id.passwordEditText)
-        val loginButton: Button = findViewById(R.id.loginButton)
+            // Enabling the username, password fields and login button
+            usernameEditText.isEnabled = true
+            passwordEditText.isEnabled = true
+            loginButton.isEnabled = true
+        }
 
         loginButton.setOnClickListener {
             val username = usernameEditText.text.toString()
@@ -63,19 +72,31 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+
     override fun onResume() {
         super.onResume()
 
         val logoutButtonMain: Button = findViewById(R.id.logoutButtonMain)
+        val usernameEditText: EditText = findViewById(R.id.usernameEditText)
+        val passwordEditText: EditText = findViewById(R.id.passwordEditText)
+        val loginButton: Button = findViewById(R.id.loginButton)
 
         if (sharedPreferences.getBoolean("isLoggedIn", false)) {
             val toolbar: Toolbar = findViewById(R.id.toolbar)
             setSupportActionBar(toolbar)
             logoutButtonMain.visibility = View.VISIBLE
+
+            usernameEditText.isEnabled = false
+            passwordEditText.isEnabled = false
+            loginButton.isEnabled = false
         } else {
             logoutButtonMain.visibility = View.GONE
+            usernameEditText.isEnabled = true
+            passwordEditText.isEnabled = true
+            loginButton.isEnabled = true
         }
     }
+
 
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
